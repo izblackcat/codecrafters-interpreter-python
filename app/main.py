@@ -15,7 +15,7 @@ def main():
     if command != "tokenize":
         print(f"Unknown command: {command}", file=sys.stderr)
         exit(1)
-
+        
     with open(filename) as file:
         file_contents = file.read()
 
@@ -28,7 +28,7 @@ def main():
             elif c == ')':
                 print("RIGHT_PAREN ) null")
         print("EOF  null")
-        
+
     else:
         print("EOF  null") # Placeholder, remove this line when implementing the scanner
 
