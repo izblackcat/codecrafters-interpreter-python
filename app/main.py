@@ -20,14 +20,28 @@ def main():
         file_contents = file.read()
 
     for c in file_contents:
-        if c == '(':
-            print("LEFT_PAREN ( null")
-        elif c == ')':
-            print("RIGHT_PAREN ) null")
-        elif c == '{':
-            print("LEFT_BRACE { null")
-        elif c == '}':
-            print("RIGHT_BRACE } null")
+        match (c):
+            case '(':
+                print("LEFT_PAREN ( null")
+            case ')':
+                print("RIGHT_PAREN ) null")
+            case '{':
+                print("LEFT_BRACE { null")
+            case '}':
+                print("RIGHT_BRACE } null")
+            case '*':
+                print("STAR * null")
+            case '.':
+                print("DOT . null")
+            case ',':
+                print("COMMA , null")
+            case '+':
+                print("PLUS + null")
+            case '-':
+                print("MINUS - null")
+            case ';':
+                print("SEMICOLON ; null")
+    
     print("EOF  null")
 
 
