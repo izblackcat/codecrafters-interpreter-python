@@ -19,7 +19,13 @@ def main():
     with open(filename) as file:
         file_contents = file.read()
 
+    error = False
+
+
     for c in file_contents:
+
+        line_number =file_contents.count("\n", 0, file_contents.find(c)) + 1
+
         match (c):
             case '(':
                 print("LEFT_PAREN ( null")
@@ -41,8 +47,17 @@ def main():
                 print("MINUS - null")
             case ';':
                 print("SEMICOLON ; null")
-    
+            case _:
+                error = True
+                print(f"[line {line_number}] Error: Unexpected character: {c}", file=sys.stderr)
+        
     print("EOF  null")
+    
+    if error : 
+        sys.exit(65)
+    else:
+        sys.exit(0)
+    
 
 
 if __name__ == "__main__":
