@@ -51,12 +51,21 @@ def main():
             case ';':
                 print("SEMICOLON ; null")
             case '=':
+                # if it's at the end then it can't be ==
+                # if it's just before the end, then we should see the last one (before it)
                 if i < len(file_contents) - 1 and file_contents[i + 1] == "=":
                     print("EQUAL_EQUAL == null")
                     i += 2
                     continue
                 else:
                     print("EQUAL = null")
+            case '!':
+                if i < len(file_contents) - 1 and file_contents[i + 1] == "=":
+                    print("BANG_EQUAL != null")
+                    i += 2
+                    continue
+                else:
+                    print("BANG ! null")
             case _:
                 error = True
                 print(f"[line {line_number}] Error: Unexpected character: {c}", file=sys.stderr)
