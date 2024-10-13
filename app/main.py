@@ -66,6 +66,21 @@ def main():
                     continue
                 else:
                     print("BANG ! null")
+            case '<':
+                if i < len(file_contents) - 1 and file_contents[i + 1] == "=":
+                    print("LESS_EQUAL <= null")
+                    i += 2
+                    continue
+                else:
+                    print("LESS < null")
+            
+            case '>':
+                if i < len(file_contents) - 1 and file_contents[i + 1] == "=":
+                    print("GREATER_EQUAL >= null")
+                    i += 2
+                    continue
+                else:
+                    print("GREATER > null")
             case _:
                 error = True
                 print(f"[line {line_number}] Error: Unexpected character: {c}", file=sys.stderr)
