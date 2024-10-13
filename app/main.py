@@ -22,9 +22,12 @@ def main():
     error = False
 
 
-    for c in file_contents:
+    i = 0
+    while i < len(file_contents):
 
-        line_number =file_contents.count("\n", 0, file_contents.find(c)) + 1
+        c = file_contents[i];
+
+        line_number = file_contents.count("\n", 0, file_contents.find(c)) + 1
 
         match (c):
             case '(':
@@ -47,10 +50,17 @@ def main():
                 print("MINUS - null")
             case ';':
                 print("SEMICOLON ; null")
+            case '=':
+                if i < len(file_contents) - 1 and file_contents[i + 1] == "=":
+                    print("EQUAL_EQUAL == null")
+                    i += 2
+                    continue
+                else:
+                    print("EQUAL = null")
             case _:
                 error = True
                 print(f"[line {line_number}] Error: Unexpected character: {c}", file=sys.stderr)
-        
+        i += 1
     print("EOF  null")
     
     if error : 
@@ -58,7 +68,6 @@ def main():
     else:
         sys.exit(0)
     
-
 
 if __name__ == "__main__":
     main()
