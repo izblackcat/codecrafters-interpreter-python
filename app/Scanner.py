@@ -86,7 +86,9 @@ class Scanner:
         return self.source_file[self.current - 1]
 
     def match_token(self, token):
-        if not self.is_the_last_token() and self.source_file[self.current] != token:
+        if self.is_the_last_token():
+            return False
+        if self.source_file[self.current] != token:
             return False
         self.current += 1
         return True
