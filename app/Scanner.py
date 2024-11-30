@@ -18,6 +18,8 @@ class Scanner:
         "<": "LESS",
         ">": "GREATER",
         "!": "BANG",
+        # " ": "SPACE",
+        # "\n": "W",
     }
 
     def __init__(self, source_file) -> None:
@@ -39,6 +41,11 @@ class Scanner:
         token_name = self.TOKENS.get(token, "UNKNOWN")
 
         if token_name == "UNKNOWN":
+            if ord(token) == 9 or ord(token) == 10 or ord(token) == 32:
+                # print("got to ord()")
+                pass
+                return None, None
+
             line_number = self.get_line_number(token)
             self.errors.append(
                 f"[line {line_number}] Error: Unexpected character: {token}"
@@ -65,6 +72,12 @@ class Scanner:
             if self.match_token("/"):
                 self.scan_comment()
                 return None, None
+        # if token == "\n":
+        #     pass
+        #     return None, None
+        # if ord(token) in [9, 32]:
+        #     pass
+        #     return None, None
 
         return token, token_name
 
