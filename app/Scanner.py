@@ -18,8 +18,6 @@ class Scanner:
         "<": "LESS",
         ">": "GREATER",
         "!": "BANG",
-        # " ": "SPACE",
-        # "\n": "W",
     }
 
     def __init__(self, source_file) -> None:
@@ -41,8 +39,9 @@ class Scanner:
         token_name = self.TOKENS.get(token, "UNKNOWN")
 
         if token_name == "UNKNOWN":
-            if ord(token) == 9 or ord(token) == 10 or ord(token) == 32:
-                # print("got to ord()")
+            # Check for whitespaces here since I did not add them
+            # to the TOKENS dict
+            if ord(token) in [9, 10, 32]:
                 pass
                 return None, None
 
@@ -72,12 +71,6 @@ class Scanner:
             if self.match_token("/"):
                 self.scan_comment()
                 return None, None
-        # if token == "\n":
-        #     pass
-        #     return None, None
-        # if ord(token) in [9, 32]:
-        #     pass
-        #     return None, None
 
         return token, token_name
 

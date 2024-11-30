@@ -1,8 +1,6 @@
 import sys
 
-sys.path.append("/home/izarkaoui/Documents/codecrafters-interpreter-python/")
-
-from app.Scanner import Scanner
+from .Scanner import Scanner
 
 
 def main():
