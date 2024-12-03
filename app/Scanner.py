@@ -24,6 +24,7 @@ class Scanner:
         self.source_file = source_file
         self.current = 0
         self.errors = []
+        self.tokens_output = []
 
     def scan_file(self):
         while not self.is_the_last_token():
@@ -36,19 +37,21 @@ class Scanner:
     def scan_token(self):
         # this is what iterates the source file:
         token = self.advance()
-        token_name = self.TOKENS.get(token, "UNKNOWN")
+        token_name = Scanner.TOKENS.get(token, "UNKNOWN")
 
         if token_name == "UNKNOWN":
             # Check for whitespaces here since I did not add them
             # to the TOKENS dict
+
+            # if token in [" ", "\n", "\t"]: is equivalent to :
             if ord(token) in [9, 10, 32]:
                 pass
                 return None, None
-
-            line_number = self.get_line_number(token)
-            self.errors.append(
-                f"[line {line_number}] Error: Unexpected character: {token}"
-            )
+            else:
+                line_number = self.get_line_number(token, self.current)
+                self.errors.append(
+                    f"[line {line_number}] Error: Unexpected character: {token}"
+                )
             return None, None
 
         if token == "=":
@@ -81,8 +84,23 @@ class Scanner:
         while (not self.is_the_last_token()) and self.advance() != "\n":
             continue
 
-    def get_line_number(self, token):
-        return self.source_file.count("\n", 0, self.source_file.find(token)) + 1
+    def get_line_number(self, token, pos):
+
+        occurences = []
+        line = 1
+        for i in range(len(self.source_file)):
+            if self.source_file[i] == "\n":
+                line += 1
+
+            if self.source_file[i] == token:
+                occurences.append({"pos": i, "line": line})
+
+        for i in range(len(occurences)):
+            occ = occurences[i]
+            if occ["pos"] == pos - 1:
+                return occ["line"]
+
+        # return self.source_file.count("\n", 0, self.source_file.find(token)) + 1
 
     def is_the_last_token(self):
         return self.current >= len(self.source_file)
