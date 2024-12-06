@@ -22,7 +22,10 @@ def main():
         file_contents = file.read()
 
     scanner = Scanner(file_contents)
-    errors = scanner.scan_file()
+    tokens, errors = scanner.scan_file()
+
+    for token in tokens:
+        print(token)
 
     for error in errors:
         print(error, file=sys.stderr)
