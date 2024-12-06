@@ -66,12 +66,30 @@ class Scanner:
                 pass
             case "\n":
                 self.line += 1
+            case '"':
+                self.scan_string()
             case _:
-                self.error(token)
+                self.error(f"[line {self.line}] Error: Unexpected character: {token}")
 
-    def add_token(self, token_type):
+    def scan_string(self):
+        while self.look_a_head() != '"' and not self.is_the_last_token():
+            self.advance()
+            if self.look_a_head() == "\n":
+                self.line += 1
+
+        if self.is_the_last_token():
+            self.error(f"[line {self.line}] Error: Unterminated string.")
+            return
+
+        self.advance()
+
+        string = self.source[self.start + 1 : self.current - 1]
+        self.add_token(token_type="STRING", literal=string)
+
+    def add_token(self, token_type, literal="null"):
         lexeme = self.source[self.start : self.current]
-        self.tokens.append(Token(token_type=token_type, lexeme=lexeme, literal="null"))
+        token = Token(token_type=token_type, lexeme=lexeme, literal=literal)
+        self.tokens.append(token)
 
     def is_the_last_token(self):
         return self.current >= len(self.source)
@@ -95,7 +113,6 @@ class Scanner:
         self.current += 1
         return True
 
-    def error(self, token):
+    def error(self, error_message):
         # [line 1] Error: Unexpected character: $
-        error_message = f"[line {self.line}] Error: Unexpected character: {token}"
         self.errors.append(error_message)
