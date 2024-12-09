@@ -71,10 +71,25 @@ class Scanner:
             case _:
                 if self.is_digit(token):
                     self.scan_number()
+                elif self.is_alpha(token):
+                    self.scan_identifier()
                 else:
                     self.error(
                         f"[line {self.line}] Error: Unexpected character: {token}"
                     )
+
+    def scan_identifier(self):
+        while self.is_alpha_numeric(self.look_a_head()):
+            self.advance()
+
+        literal = self.source[self.start : self.current]
+        self.add_token("IDENTIFIER")
+
+    def is_alpha_numeric(self, token):
+        return self.is_alpha(token) or self.is_digit(token)
+
+    def is_alpha(self, token):
+        return ("a" <= token <= "z") or ("A" <= token <= "Z") or (token == "_")
 
     def is_digit(self, token):
         return "0" <= token <= "9"
