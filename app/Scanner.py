@@ -83,16 +83,11 @@ class Scanner:
             self.advance()
 
         literal = self.source[self.start : self.current]
-        self.add_token("IDENTIFIER")
+        type = Token.KEYWORDS.get(literal, "UNKNOWN")
+        if type == "UNKNOWN":
+            type = "IDENTIFIER"
 
-    def is_alpha_numeric(self, token):
-        return self.is_alpha(token) or self.is_digit(token)
-
-    def is_alpha(self, token):
-        return ("a" <= token <= "z") or ("A" <= token <= "Z") or (token == "_")
-
-    def is_digit(self, token):
-        return "0" <= token <= "9"
+        self.add_token(type)
 
     def scan_number(self):
         while self.is_digit(self.look_a_head()):
@@ -132,15 +127,11 @@ class Scanner:
         token = Token(token_type=token_type, lexeme=lexeme, literal=literal)
         self.tokens.append(token)
 
-    def is_the_last_token(self):
-        return self.current >= len(self.source)
-
     def advance(self):
         char = self.source[self.current]
         self.current += 1
         return char
 
-    # peek
     def look_a_head(self):
         if self.is_the_last_token():
             return "\0"
@@ -157,3 +148,17 @@ class Scanner:
     def error(self, error_message):
         # [line 1] Error: Unexpected character: $
         self.errors.append(error_message)
+
+    # ________________ helpers: ______________________
+
+    def is_the_last_token(self):
+        return self.current >= len(self.source)
+
+    def is_alpha_numeric(self, token):
+        return self.is_alpha(token) or self.is_digit(token)
+
+    def is_alpha(self, token):
+        return ("a" <= token <= "z") or ("A" <= token <= "Z") or (token == "_")
+
+    def is_digit(self, token):
+        return "0" <= token <= "9"

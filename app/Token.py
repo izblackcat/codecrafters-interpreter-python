@@ -1,21 +1,22 @@
 class Token:
 
-    TOKENS = {
-        "(": "LEFT_PAREN",
-        ")": "RIGHT_PAREN",
-        "{": "LEFT_BRACE",
-        "}": "RIGHT_BRACE",
-        "*": "STAR",
-        ".": "DOT",
-        ",": "COMMA",
-        "+": "PLUS",
-        "-": "MINUS",
-        ";": "SEMICOLON",
-        "/": "SLASH",
-        "=": "EQUAL",
-        "<": "LESS",
-        ">": "GREATER",
-        "!": "BANG",
+    KEYWORDS = {
+        "and": "AND",
+        "class": "CLASS",
+        "else": "ELSE",
+        "false": "FALSE",
+        "for": "FOR",
+        "fun": "FUN",
+        "if": "IF",
+        "nil": "NIL",
+        "or": "OR",
+        "print": "PRINT",
+        "return": "RETURN",
+        "super": "SUPER",
+        "this": "THIS",
+        "true": "TRUE",
+        "var": "VAR",
+        "while": "WHILE",
     }
 
     def __init__(self, token_type, lexeme, literal):
