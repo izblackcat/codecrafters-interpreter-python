@@ -1,6 +1,6 @@
 import sys
 
-from .Scanner import Scanner
+from app.Scanner import Scanner
 
 
 def main():
@@ -14,14 +14,20 @@ def main():
     command = sys.argv[1]
     filename = sys.argv[2]
 
-    if command != "tokenize":
-        print(f"Unknown command: {command}", file=sys.stderr)
-        exit(1)
-
     with open(filename) as file:
         file_contents = file.read()
 
-    scanner = Scanner(file_contents)
+    if command == "tokenize":
+        tokenize(file_contents)
+    elif command == "parse":
+        parse()
+    else:
+        print(f"Unknown command: {command}", file=sys.stderr)
+        exit(1)
+
+
+def tokenize(file):
+    scanner = Scanner(file)
     tokens, errors = scanner.scan_file()
 
     for token in tokens:
@@ -34,6 +40,10 @@ def main():
         sys.exit(65)
     else:
         sys.exit(0)
+
+
+def parse():
+    print("parse")
 
 
 if __name__ == "__main__":

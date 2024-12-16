@@ -1,4 +1,4 @@
-from .Token import Token
+from app.Token import Token
 
 
 class Scanner:
