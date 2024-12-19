@@ -43,7 +43,7 @@ def tokenize(file):
 
 
 def parse():
-    print("parse")
+    pass
 
 
 if __name__ == "__main__":

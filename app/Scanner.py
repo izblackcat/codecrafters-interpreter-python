@@ -1,4 +1,5 @@
 from app.Token import Token
+from app.token_type import TokenType
 
 
 class Scanner:
@@ -16,7 +17,7 @@ class Scanner:
             self.start = self.current
             self.scan_token()
 
-        self.tokens.append(Token("EOF", "", "null"))
+        self.tokens.append(Token(TokenType.EOF, "", "null"))
         return self.tokens, self.errors
 
     def scan_token(self):
@@ -25,39 +26,49 @@ class Scanner:
 
         match token:
             case "(":
-                self.add_token("LEFT_PAREN")
+                self.add_token(TokenType.LEFT_PAREN)
             case ")":
-                self.add_token("RIGHT_PAREN")
+                self.add_token(TokenType.RIGHT_PAREN)
             case "{":
-                self.add_token("LEFT_BRACE")
+                self.add_token(TokenType.LEFT_BRACE)
             case "}":
-                self.add_token("RIGHT_BRACE")
+                self.add_token(TokenType.RIGHT_BRACE)
             case ",":
-                self.add_token("COMMA")
+                self.add_token(TokenType.COMMA)
             case ".":
-                self.add_token("DOT")
+                self.add_token(TokenType.DOT)
             case "-":
-                self.add_token("MINUS")
+                self.add_token(TokenType.MINUS)
             case "+":
-                self.add_token("PLUS")
+                self.add_token(TokenType.PLUS)
             case ";":
-                self.add_token("SEMICOLON")
+                self.add_token(TokenType.SEMICOLON)
             case "*":
-                self.add_token("STAR")
+                self.add_token(TokenType.STAR)
             case "!":
-                self.add_token("BANG_EQUAL" if self.match_token("=") else "BANG")
+                self.add_token(
+                    TokenType.BANG_EQUAL if self.match_token("=") else TokenType.BANG
+                )
             case "=":
-                self.add_token("EQUAL_EQUAL" if self.match_token("=") else "EQUAL")
+                self.add_token(
+                    TokenType.EQUAL_EQUAL if self.match_token("=") else TokenType.EQUAL
+                )
             case "<":
-                self.add_token("LESS_EQUAL" if self.match_token("=") else "LESS")
+                self.add_token(
+                    TokenType.LESS_EQUAL if self.match_token("=") else TokenType.LESS
+                )
             case ">":
-                self.add_token("GREATER_EQUAL" if self.match_token("=") else "GREATER")
+                self.add_token(
+                    TokenType.GREATER_EQUAL
+                    if self.match_token("=")
+                    else TokenType.GREATER
+                )
             case "/":
                 if self.match_token("/"):
                     while self.look_a_head() != "\n" and not self.is_the_last_token():
                         self.advance()
                 else:
-                    self.add_token("SLASH")
+                    self.add_token(TokenType.SLASH)
             case " ":
                 pass
             case "\t":
@@ -83,6 +94,7 @@ class Scanner:
             self.advance()
 
         literal = self.source[self.start : self.current]
+
         type = Token.KEYWORDS.get(literal, "UNKNOWN")
         if type == "UNKNOWN":
             type = "IDENTIFIER"
@@ -100,7 +112,7 @@ class Scanner:
                 self.advance()
 
         value = float(self.source[self.start : self.current])
-        self.add_token(token_type="NUMBER", literal=value)
+        self.add_token(token_type=TokenType.NUMBER, literal=value)
 
     def look_a_head_next(self):
         if self.current + 1 >= len(self.source):
@@ -120,7 +132,7 @@ class Scanner:
         self.advance()
 
         string = self.source[self.start + 1 : self.current - 1]
-        self.add_token(token_type="STRING", literal=string)
+        self.add_token(token_type=TokenType.STRING, literal=string)
 
     def add_token(self, token_type, literal="null"):
         lexeme = self.source[self.start : self.current]
