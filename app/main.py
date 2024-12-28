@@ -1,6 +1,9 @@
 import sys
 
 from app.Scanner import Scanner
+from app.Parser import Parser
+from app.ast_printer import AstPrinter
+from app.Error import Error
 
 
 def main():
@@ -17,33 +20,47 @@ def main():
     with open(filename) as file:
         file_contents = file.read()
 
+    tokens = []
+
     if command == "tokenize":
-        tokenize(file_contents)
+        tokens = tokenize(file_contents)
+        for token in tokens:
+            print(token)
+
+        if Error.hadError:
+            # print(65)
+            sys.exit(65)
+
     elif command == "parse":
-        parse()
+        tokens = tokenize(file_contents)
+        parse(tokens)
     else:
         print(f"Unknown command: {command}", file=sys.stderr)
         exit(1)
 
 
 def tokenize(file):
+
     scanner = Scanner(file)
-    tokens, errors = scanner.scan_file()
+    tokens = scanner.scan_file()
 
-    for token in tokens:
-        print(token)
+    # if Error.hadError:
+    #     sys.exit(65)
 
-    for error in errors:
-        print(error, file=sys.stderr)
-
-    if errors:
-        sys.exit(65)
-    else:
-        sys.exit(0)
+    return tokens
 
 
-def parse():
-    pass
+def parse(tokens):
+    print("parsing...........")
+
+    parser = Parser(tokens)
+    # # TODO: this one here returns None for test.lox containing only true. Fix that!
+    expr = parser.parse()
+
+    if Error.hadError:
+        return
+
+    print(f"expr = {expr}")
 
 
 if __name__ == "__main__":

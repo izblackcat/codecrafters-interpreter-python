@@ -1,5 +1,6 @@
 from app.Token import Token
 from app.token_type import TokenType
+from app.Error import Error
 
 
 class Scanner:
@@ -10,15 +11,17 @@ class Scanner:
         self.start = 0
         self.line = 1
         self.tokens = []
-        self.errors = []
+        # self.errors = []
+        self.err = Error()
 
     def scan_file(self):
         while not self.is_the_last_token():
             self.start = self.current
             self.scan_token()
 
-        self.tokens.append(Token(TokenType.EOF, "", "null"))
-        return self.tokens, self.errors
+        self.tokens.append(Token(TokenType.EOF.name, "", "null", self.line))
+        # return self.tokens, self.errors
+        return self.tokens
 
     def scan_token(self):
         # this is what iterates the source file:
@@ -85,8 +88,9 @@ class Scanner:
                 elif self.is_alpha(token):
                     self.scan_identifier()
                 else:
-                    self.error(
-                        f"[line {self.line}] Error: Unexpected character: {token}"
+                    Error.hadError = True
+                    self.err.error(
+                        line=self.line, message=f"Unexpected character: {token}"
                     )
 
     def scan_identifier(self):
@@ -97,7 +101,7 @@ class Scanner:
 
         type = Token.KEYWORDS.get(literal, "UNKNOWN")
         if type == "UNKNOWN":
-            type = "IDENTIFIER"
+            type = TokenType.IDENTIFIER
 
         self.add_token(type)
 
@@ -126,7 +130,8 @@ class Scanner:
                 self.line += 1
 
         if self.is_the_last_token():
-            self.error(f"[line {self.line}] Error: Unterminated string.")
+            # self.error(f"[line {self.line}] Error: Unterminated string.")
+            self.err.error(line=self.line, message="Unterminated string.")
             return
 
         self.advance()
@@ -136,7 +141,9 @@ class Scanner:
 
     def add_token(self, token_type, literal="null"):
         lexeme = self.source[self.start : self.current]
-        token = Token(token_type=token_type, lexeme=lexeme, literal=literal)
+        token = Token(
+            token_type=token_type.name, lexeme=lexeme, literal=literal, line=self.line
+        )
         self.tokens.append(token)
 
     def advance(self):

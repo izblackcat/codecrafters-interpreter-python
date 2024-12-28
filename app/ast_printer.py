@@ -1,8 +1,8 @@
-from expressions.Visitor import Visitor
-from expressions.Binary import Binary
-from expressions.Grouping import Grouping
-from expressions.Unary import Unary
-from expressions.Literal import Literal
+from app.expressions.Visitor import Visitor
+from app.expressions.Binary import Binary
+from app.expressions.Grouping import Grouping
+from app.expressions.Unary import Unary
+from app.expressions.Literal import Literal
 
 
 class AstPrinter(Visitor):
