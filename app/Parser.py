@@ -11,7 +11,6 @@ class Parser:
     def __init__(self, tokens):
         self.tokens = tokens
         self.current = 0
-        # self.errors = []
         self.err = Error()
 
     def parse(self):
@@ -28,7 +27,6 @@ class Parser:
         Corresponds to the grammar rule :
             equality       → comparison ( ( "!=" | "==" ) comparison )* ;
         """
-
         expr = self.comparison()
 
         while self.match(TokenType.BANG_EQUAL, TokenType.EQUAL_EQUAL):
@@ -42,7 +40,6 @@ class Parser:
         Corresponds to the grammar rule :
             comparison     → term ( ( ">" | ">=" | "<" | "<=" ) term )* ;
         """
-
         expr = self.term()
 
         while self.match(
@@ -98,15 +95,13 @@ class Parser:
         Corresponds to the grammar rule :
             primary        → NUMBER | STRING | "true" | "false" | "nil" | "(" expression ")" ;
         """
-
         if self.match(TokenType.TRUE):
             return Literal("true")
         elif self.match(TokenType.FALSE):
             return Literal("false")
         elif self.match(TokenType.NIL):
-            return Literal(None)
-        elif self.match(TokenType.NUMBER, TokenType.NUMBER):
-            # TODO: this may need to be fixed later!
+            return Literal("nil")
+        elif self.match(TokenType.NUMBER, TokenType.STRING):
             return Literal(self.previous().literal)
         elif self.match(TokenType.LEFT_PAREN):
             expr = self.expression()
@@ -115,12 +110,6 @@ class Parser:
         raise self.error(self.peek(), "Expect expression")
 
     def error(self, token, message):
-        # error = ""
-        # if token.token_type == TokenType.EOF:
-        #     error = f"[ line {token.line} ] at end {message}"
-        # else:
-        #     error = f"[ line {token.line} ] at '{token.lexeme}' {message}"
-        # self.errors.append(error)
         self.err.error(line=None, token=token, message=message)
         return Parser.ParseError()
 
@@ -160,13 +149,22 @@ class Parser:
 
     def match(self, *types):
         for t in types:
-            if self.check(t):
+            # if t == TokenType.TRUE:
+            #     token = Token(TokenType.TRUE, lexeme="true", literal="null", line=1)
+            #     print(f"token : {token}")
+            #     print(f"token.token_type = {token.token_type}")
+            #     print(f"token.token_type == t -> {token.token_type == t}")
+            #     print(f"peek() = {self.peek()}")
+            #     print(f"peek().token_type == t -> {self.peek().token_type == t.name}")
+
+            if self.check(t.name):
                 self.advance()
                 return True
         return False
 
     def check(self, type):
         if self.is_at_end():
+            print("in check(), it is at end .........")
             return False
         return self.peek().token_type == type
 

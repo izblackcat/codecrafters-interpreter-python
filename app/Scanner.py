@@ -11,7 +11,6 @@ class Scanner:
         self.start = 0
         self.line = 1
         self.tokens = []
-        # self.errors = []
         self.err = Error()
 
     def scan_file(self):
@@ -20,7 +19,6 @@ class Scanner:
             self.scan_token()
 
         self.tokens.append(Token(TokenType.EOF.name, "", "null", self.line))
-        # return self.tokens, self.errors
         return self.tokens
 
     def scan_token(self):
@@ -130,7 +128,6 @@ class Scanner:
                 self.line += 1
 
         if self.is_the_last_token():
-            # self.error(f"[line {self.line}] Error: Unterminated string.")
             self.err.error(line=self.line, message="Unterminated string.")
             return
 

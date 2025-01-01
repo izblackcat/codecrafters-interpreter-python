@@ -40,27 +40,18 @@ def main():
 
 
 def tokenize(file):
-
     scanner = Scanner(file)
     tokens = scanner.scan_file()
-
-    # if Error.hadError:
-    #     sys.exit(65)
 
     return tokens
 
 
 def parse(tokens):
-    print("parsing...........")
 
     parser = Parser(tokens)
-    # # TODO: this one here returns None for test.lox containing only true. Fix that!
+
     expr = parser.parse()
-
-    if Error.hadError:
-        return
-
-    print(f"expr = {expr}")
+    print(AstPrinter().print_expr(expr=expr))
 
 
 if __name__ == "__main__":
