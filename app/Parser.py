@@ -114,7 +114,7 @@ class Parser:
         return Parser.ParseError()
 
     def consume(self, type, message):
-        if self.check(type):
+        if self.check(type.name):
             return self.advance()
         raise self.error(self.peek(), message)
 
@@ -149,14 +149,6 @@ class Parser:
 
     def match(self, *types):
         for t in types:
-            # if t == TokenType.TRUE:
-            #     token = Token(TokenType.TRUE, lexeme="true", literal="null", line=1)
-            #     print(f"token : {token}")
-            #     print(f"token.token_type = {token.token_type}")
-            #     print(f"token.token_type == t -> {token.token_type == t}")
-            #     print(f"peek() = {self.peek()}")
-            #     print(f"peek().token_type == t -> {self.peek().token_type == t.name}")
-
             if self.check(t.name):
                 self.advance()
                 return True
@@ -164,7 +156,6 @@ class Parser:
 
     def check(self, type):
         if self.is_at_end():
-            print("in check(), it is at end .........")
             return False
         return self.peek().token_type == type
 
