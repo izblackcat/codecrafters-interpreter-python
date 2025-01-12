@@ -16,7 +16,7 @@ class AstPrinter(Visitor):
         return self.parenthesize(unary_expr.operator, unary_expr.right)
 
     def visit_literal_expr(self, literal_expr):
-        if not literal_expr.value:
+        if literal_expr.value is None:
             return "nil"
         return literal_expr.value
 
