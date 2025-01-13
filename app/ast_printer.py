@@ -9,7 +9,7 @@ class AstPrinter(Visitor):
 
     def visit_binary_expr(self, binary_expr):
         return self.parenthesize(
-            binary_expr.operator, binary_expr.left, binary_expr.right
+            binary_expr.operator.lexeme, binary_expr.left, binary_expr.right
         )
 
     def visit_unary_expr(self, unary_expr):
