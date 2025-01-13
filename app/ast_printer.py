@@ -13,7 +13,7 @@ class AstPrinter(Visitor):
         )
 
     def visit_unary_expr(self, unary_expr):
-        return self.parenthesize(unary_expr.operator, unary_expr.right)
+        return self.parenthesize(unary_expr.operator.lexeme, unary_expr.right)
 
     def visit_literal_expr(self, literal_expr):
         if literal_expr.value is None:
