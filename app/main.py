@@ -51,6 +51,11 @@ def parse(tokens):
     parser = Parser(tokens)
 
     expr = parser.parse()
+
+    if Error.hadError:
+        sys.exit(65)
+
+    # AstPrinter().print_expr(expr=expr)
     print(AstPrinter().print_expr(expr=expr))
 
 

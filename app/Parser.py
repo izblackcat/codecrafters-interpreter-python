@@ -173,4 +173,5 @@ class Parser:
     def peek(self):
         return self.tokens[self.current]
 
-    class ParseError(RuntimeError): ...
+    class ParseError(Exception):
+        pass

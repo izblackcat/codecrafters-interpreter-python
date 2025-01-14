@@ -11,8 +11,6 @@ class Error:
         pass
 
     def error(self, line, token=None, message=None):
-        Error.hadError = True
-
         if line:
             self.report(line=line, where="", message=message)
 
@@ -24,3 +22,4 @@ class Error:
 
     def report(self, line, where, message):
         print(f"[line {line}] Error{where}: {message}", file=sys.stderr)
+        Error.hadError = True
