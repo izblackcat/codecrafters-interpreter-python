@@ -4,6 +4,7 @@ from app.Scanner import Scanner
 from app.Parser import Parser
 from app.ast_printer import AstPrinter
 from app.Error import Error
+from app.Interpreter import Interpreter
 
 
 def main():
@@ -20,8 +21,6 @@ def main():
     with open(filename) as file:
         file_contents = file.read()
 
-    tokens = []
-
     if command == "tokenize":
         tokens = tokenize(file_contents)
         for token in tokens:
@@ -33,7 +32,14 @@ def main():
 
     elif command == "parse":
         tokens = tokenize(file_contents)
-        parse(tokens)
+        expr = parse(tokens)
+        print(AstPrinter().print_expr(expr=expr))
+
+    elif command == "evaluate":
+        tokens = tokenize(file_contents)
+        expr = parse(tokens=tokens)
+        evaluate(expr=expr)
+
     else:
         print(f"Unknown command: {command}", file=sys.stderr)
         exit(1)
@@ -55,8 +61,17 @@ def parse(tokens):
     if Error.hadError:
         sys.exit(65)
 
-    # AstPrinter().print_expr(expr=expr)
-    print(AstPrinter().print_expr(expr=expr))
+    return expr
+
+
+def evaluate(expr):
+
+    interpreter = Interpreter()
+
+    interpreter.interpret(expr=expr)
+
+    if Error.hadError:
+        sys.exit(65)
 
 
 if __name__ == "__main__":

@@ -1,0 +1,133 @@
+from app.expressions.Visitor import Visitor
+from app.expressions.Binary import Binary
+from app.expressions.Grouping import Grouping
+from app.expressions.Unary import Unary
+from app.expressions.Literal import Literal
+from app.token_type import TokenType
+from app.Error import Error
+
+
+class Interpreter(Visitor):
+
+    def visit_literal_expr(self, literal):
+        return literal.value
+
+    def visit_grouping_expr(self, grouping):
+        return self.evaluate(grouping.expression)
+
+    def visit_binary_expr(self, binary):
+        left = self.evaluate(binary.left)
+        right = self.evaluate(binary.right)
+
+        match binary.operator.token_type:
+            case TokenType.MINUS.name:
+                self.check_number_operands(binary.operator, left, right)
+                # TODO: this may need casting. In that case, we may need to check int and float !
+                return left - right
+            case TokenType.SLASH.name:
+                self.check_number_operands(binary.operator, left, right)
+                return left / right
+
+            case TokenType.STAR.name:
+                self.check_number_operands(binary.operator, left, right)
+                return left * right
+
+            case TokenType.PLUS.name:
+                if isinstance(left, str) and isinstance(right, str):
+                    return left + right
+                if isinstance(left, (int, float)) and isinstance(right, (int, float)):
+                    return left + right
+                raise RuntimeException(
+                    binary.operator, "Operands must be two number or strings."
+                )
+
+            case TokenType.GREATER.name:
+                self.check_number_operands(binary.operator, left, right)
+                return left > right
+
+            case TokenType.GREATER_EQUAL.name:
+                self.check_number_operands(binary.operator, left, right)
+                return left >= right
+
+            case TokenType.LESS.name:
+                self.check_number_operands(binary.operator, left, right)
+                return left < right
+
+            case TokenType.LESS_EQUAL.name:
+                self.check_number_operands(binary.operator, left, right)
+                return left <= right
+
+            case TokenType.BANG_EQUAL.name:
+                return not self.is_equal(left, right)
+
+            case TokenType.EQUAL_EQUAL.name:
+                return self.is_equal(left, right)
+
+    def visit_unary_expr(self, unary):
+
+        right = self.evaluate(unary.right)
+
+        match unary.operator.token_type:
+            case TokenType.MINUS.name:
+                self.check_number_operand(unary.operator, right)
+                return -right
+            case TokenType.BANG.name:
+                return not self.is_truthy(right)
+
+        return None
+
+    def interpret(self, expr):
+        try:
+            value = self.evaluate(expr=expr)
+
+            print(self.stringify(value))
+        except RuntimeException as err:
+            Error.runtime_error(err)
+
+    def stringify(self, object):
+        if object is None:
+            return "nil"
+
+        elif isinstance(object, (int, float)):
+            text = str(object)
+            if text.endswith(".0"):
+                text = text[0 : len(text) - 2]
+            return text
+
+        return str(object)
+
+    def evaluate(self, expr):
+        return expr.accept(self)
+
+    def is_truthy(self, object):
+        if object is None:
+            return False
+        elif object is True or object is False:
+            return object
+        else:
+            return True
+
+    def is_equal(self, left, right):
+        if left is None and right is None:
+            return True
+        elif left is None:
+            return False
+        else:
+            left == right
+
+    def check_number_operand(self, operator, operand):
+        if isinstance(operand, (float, int)):
+            return
+        raise RuntimeException(operator, "Operand must be a number.")
+
+    def check_number_operands(self, operator, left, right):
+        if isinstance(left, (int, float)) and isinstance(right, (int, float)):
+            return
+        raise RuntimeException(operator, "Operands must be numbers.")
+
+
+class RuntimeException(RuntimeError):
+
+    def __init__(self, token, message):
+        super().__init__(message)
+        self.token = token

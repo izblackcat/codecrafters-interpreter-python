@@ -6,9 +6,14 @@ from app.token_type import TokenType
 class Error:
 
     hadError = False
+    hadRuntimeError = False
 
     def __init__(self):
         pass
+
+    def runtime_error(self, err):
+        print(f"{err.message} \n[line {err.token.line}]")
+        Error.hadRuntimeError = True
 
     def error(self, line, token=None, message=None):
         if line:
