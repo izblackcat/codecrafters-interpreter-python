@@ -14,7 +14,6 @@ class Interpreter(Visitor):
     def visit_binary_expr(self, binary):
         left = self.evaluate(binary.left)
         right = self.evaluate(binary.right)
-
         match binary.operator.token_type:
             case TokenType.MINUS.name:
                 self.check_number_operands(binary.operator, left, right)
@@ -108,7 +107,7 @@ class Interpreter(Visitor):
         elif left is None:
             return False
         else:
-            left == right
+            return left == right
 
     def check_number_operand(self, operator, operand):
         if isinstance(operand, (float, int)):
