@@ -100,7 +100,7 @@ class Parser:
         elif self.match(TokenType.FALSE):
             return Literal("false")
         elif self.match(TokenType.NIL):
-            return Literal("nil")
+            return Literal(None)
         elif self.match(TokenType.NUMBER, TokenType.STRING):
             return Literal(self.previous().literal)
         elif self.match(TokenType.LEFT_PAREN):

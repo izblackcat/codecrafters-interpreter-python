@@ -1,8 +1,4 @@
 from app.expressions.Visitor import Visitor
-from app.expressions.Binary import Binary
-from app.expressions.Grouping import Grouping
-from app.expressions.Unary import Unary
-from app.expressions.Literal import Literal
 from app.token_type import TokenType
 from app.Error import Error
 
@@ -22,7 +18,6 @@ class Interpreter(Visitor):
         match binary.operator.token_type:
             case TokenType.MINUS.name:
                 self.check_number_operands(binary.operator, left, right)
-                # TODO: this may need casting. In that case, we may need to check int and float !
                 return left - right
             case TokenType.SLASH.name:
                 self.check_number_operands(binary.operator, left, right)
@@ -64,9 +59,7 @@ class Interpreter(Visitor):
                 return self.is_equal(left, right)
 
     def visit_unary_expr(self, unary):
-
         right = self.evaluate(unary.right)
-
         match unary.operator.token_type:
             case TokenType.MINUS.name:
                 self.check_number_operand(unary.operator, right)
@@ -79,7 +72,6 @@ class Interpreter(Visitor):
     def interpret(self, expr):
         try:
             value = self.evaluate(expr=expr)
-
             print(self.stringify(value))
         except RuntimeException as err:
             Error.runtime_error(err)
@@ -87,14 +79,15 @@ class Interpreter(Visitor):
     def stringify(self, object):
         if object is None:
             return "nil"
-
+        elif isinstance(object, bool):
+            return str(object).lower()
         elif isinstance(object, (int, float)):
             text = str(object)
             if text.endswith(".0"):
                 text = text[0 : len(text) - 2]
             return text
-
-        return str(object)
+        else:
+            return str(object)
 
     def evaluate(self, expr):
         return expr.accept(self)
@@ -102,8 +95,10 @@ class Interpreter(Visitor):
     def is_truthy(self, object):
         if object is None:
             return False
-        elif object is True or object is False:
-            return object
+        elif object is False:
+            return False
+        elif object == "false":
+            return False
         else:
             return True
 
