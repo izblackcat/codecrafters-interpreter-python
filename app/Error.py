@@ -12,7 +12,7 @@ class Error:
         pass
 
     def runtime_error(self, err):
-        print(f"{err.message} \n[line {err.token.line}]")
+        print(f"{err.message} \n[line {err.token.line}]", file=sys.stderr)
         Error.hadRuntimeError = True
 
     def error(self, line, token=None, message=None):

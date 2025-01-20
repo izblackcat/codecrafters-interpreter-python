@@ -70,8 +70,11 @@ def evaluate(expr):
 
     interpreter.interpret(expr=expr)
 
-    if Error.hadError:
-        sys.exit(65)
+    if Error.hadRuntimeError:
+        sys.exit(70)
+
+    # if Error.hadError:
+    #     sys.exit(65)
 
 
 if __name__ == "__main__":

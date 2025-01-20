@@ -5,6 +5,10 @@ from app.Error import Error
 
 class Interpreter(Visitor):
 
+    def __init__(self):
+        super().__init__()
+        self.err = Error()
+
     def visit_literal_expr(self, literal):
         return literal.value
 
@@ -73,7 +77,7 @@ class Interpreter(Visitor):
             value = self.evaluate(expr=expr)
             print(self.stringify(value))
         except RuntimeException as err:
-            Error.runtime_error(err)
+            self.err.runtime_error(err=err)
 
     def stringify(self, object):
         if object is None:
@@ -123,5 +127,5 @@ class Interpreter(Visitor):
 class RuntimeException(RuntimeError):
 
     def __init__(self, token, message):
-        super().__init__(message)
+        self.message = message
         self.token = token
