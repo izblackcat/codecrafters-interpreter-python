@@ -33,22 +33,34 @@ class Interpreter(Visitor):
                 return left * right
 
             case TokenType.PLUS.name:
-                print(f"left ::: {left} and right ::: {isinstance(right, str)}")
-                if (
-                    left == "true"
-                    or right == "true"
-                    or left == "false"
-                    or right == "false"
-                ):
-                    print("ok!")
-                elif isinstance(left, str) and isinstance(right, str):
+                # print(f"left ::: {left} and right ::: {isinstance(right, str)}")
+                is_left_string = isinstance(left, str)
+                is_right_string = isinstance(right, str)
+                is_left_number = isinstance(left, (int, float)) and not isinstance(
+                    left, bool
+                )
+                is_right_number = isinstance(right, (int, float)) and not isinstance(
+                    right, bool
+                )
+                is_left_bool = isinstance(left, bool)
+                is_right_bool = isinstance(right, bool)
+
+                # String concatenation
+                if is_left_string and is_right_string:
                     return left + right
-                elif isinstance(left, (float, int)) and isinstance(right, (float, int)):
+
+                # Numeric addition
+                if is_left_number and is_right_number:
                     return left + right
-                else:
-                    raise RuntimeException(
-                        binary.operator, "Operands must be two number or strings."
-                    )
+
+                # Boolean addition (if you want to support this)
+                if is_left_bool and is_right_bool:
+                    return left + right  # This will add them as 0s and 1s
+
+                # Otherwise, it's a type error
+                raise RuntimeException(
+                    binary.operator, "Operands must be two number or strings."
+                )
 
             case TokenType.GREATER.name:
                 self.check_number_operands(binary.operator, left, right)
