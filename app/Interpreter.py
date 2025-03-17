@@ -34,32 +34,19 @@ class Interpreter(Visitor):
 
             case TokenType.PLUS.name:
                 # print(f"left ::: {left} and right ::: {isinstance(right, str)}")
-                is_left_string = isinstance(left, str)
-                is_right_string = isinstance(right, str)
-                is_left_number = isinstance(left, (int, float)) and not isinstance(
-                    left, bool
-                )
-                is_right_number = isinstance(right, (int, float)) and not isinstance(
-                    right, bool
-                )
-                is_left_bool = isinstance(left, bool)
-                is_right_bool = isinstance(right, bool)
+                if isinstance(left, bool) or isinstance(right, bool):
+                    raise RuntimeException(
+                        binary.operator, "Operands must be two numbers or two strings."
+                    )
 
-                # String concatenation
-                if is_left_string and is_right_string:
+                if isinstance(left, str) and isinstance(right, str):
                     return left + right
 
-                # Numeric addition
-                if is_left_number and is_right_number:
+                if isinstance(left, (float, int)) and isinstance(right, (float, int)):
                     return left + right
 
-                # Boolean addition (if you want to support this)
-                if is_left_bool and is_right_bool:
-                    return left + right  # This will add them as 0s and 1s
-
-                # Otherwise, it's a type error
                 raise RuntimeException(
-                    binary.operator, "Operands must be two number or strings."
+                    binary.operator, "Operands must be two numbers or two strings."
                 )
 
             case TokenType.GREATER.name:
