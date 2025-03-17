@@ -37,7 +37,12 @@ class Interpreter(Visitor):
                 print(
                     f"isinstance(left, bool) == {isinstance(left, bool)} and isinstance(right, bool) == {isinstance(right, bool)}"
                 )
-                if isinstance(left, bool) or isinstance(right, bool):
+                if (
+                    left == "false"
+                    or left == "true"
+                    or right == "false"
+                    or right == "true"
+                ):
                     raise RuntimeException(
                         binary.operator, "Operands must be two numbers or two strings."
                     )
