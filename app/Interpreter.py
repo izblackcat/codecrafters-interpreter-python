@@ -34,6 +34,13 @@ class Interpreter(Visitor):
 
             case TokenType.PLUS.name:
                 print(f"left ::: {left} and right ::: {isinstance(right, str)}")
+                if (
+                    left == "true"
+                    or right == "true"
+                    or left == "false"
+                    or right == "false"
+                ):
+                    print("ok!")
                 if isinstance(left, str) and isinstance(right, str):
                     return left + right
                 if isinstance(left, (float, int)) and isinstance(right, (float, int)):
