@@ -2,6 +2,8 @@ from app.expressions.Visitor import Visitor
 from app.token_type import TokenType
 from app.Error import Error
 
+# from app.utils.value import StringValue, NumberValue, BooleanValue
+
 
 class Interpreter(Visitor):
 
@@ -31,13 +33,15 @@ class Interpreter(Visitor):
                 return left * right
 
             case TokenType.PLUS.name:
+                print(f"left ::: {left} and right ::: {right}")
                 if isinstance(left, str) and isinstance(right, str):
                     return left + right
-                if isinstance(left, (int, float)) and isinstance(right, (int, float)):
+                if isinstance(left, (float, int)) and isinstance(right, (float, int)):
                     return left + right
-                raise RuntimeException(
-                    binary.operator, "Operands must be two number or strings."
-                )
+                else:
+                    raise RuntimeException(
+                        binary.operator, "Operands must be two number or strings."
+                    )
 
             case TokenType.GREATER.name:
                 self.check_number_operands(binary.operator, left, right)
