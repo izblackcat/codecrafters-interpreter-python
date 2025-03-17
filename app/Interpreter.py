@@ -41,9 +41,9 @@ class Interpreter(Visitor):
                     or right == "false"
                 ):
                     print("ok!")
-                if isinstance(left, str) and isinstance(right, str):
+                elif isinstance(left, str) and isinstance(right, str):
                     return left + right
-                if isinstance(left, (float, int)) and isinstance(right, (float, int)):
+                elif isinstance(left, (float, int)) and isinstance(right, (float, int)):
                     return left + right
                 else:
                     raise RuntimeException(
