@@ -56,19 +56,19 @@ def parse(tokens):
 
     parser = Parser(tokens)
 
-    expr = parser.parse()
+    stmts = parser.parse()
 
     if Error.hadError:
         sys.exit(65)
 
-    return expr
+    return stmts
 
 
-def evaluate(expr):
+def evaluate(stmts):
 
     interpreter = Interpreter()
 
-    interpreter.interpret(expr=expr)
+    interpreter.interpret(stmts)
 
     if Error.hadRuntimeError:
         sys.exit(70)

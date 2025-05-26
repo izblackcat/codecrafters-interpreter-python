@@ -1,14 +1,16 @@
 from app.expressions.Visitor import Visitor
+from app.expressions.StmtVisitor import StmtVisitor
 from app.token_type import TokenType
 from app.Error import Error
 
 # from app.utils.value import StringValue, NumberValue, BooleanValue
 
 
-class Interpreter(Visitor):
+class Interpreter(Visitor, StmtVisitor):
 
     def __init__(self):
-        super().__init__()
+        Visitor.__init__(self)
+        StmtVisitor.__init__(self)
         self.err = Error()
 
     def visit_literal_expr(self, literal):
@@ -87,12 +89,24 @@ class Interpreter(Visitor):
 
         return None
 
-    def interpret(self, expr):
+    def visit_expression_stmt(self, stmt):
+        self.evaluate(stmt.expression)
+        return None
+
+    def visit_print_stmt(self, stmt):
+        value = self.evaluate(stmt.expression)
+        print(self.stringify(value))
+        return None
+
+    def interpret(self, statments):
         try:
-            value = self.evaluate(expr=expr)
-            print(self.stringify(value))
+            for statement in statments:
+                self.execute(statement)
         except RuntimeException as err:
             self.err.runtime_error(err=err)
+
+    def execute(self, stmt):
+        stmt.accept(self)
 
     def stringify(self, object):
         if object is None:

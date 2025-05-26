@@ -4,6 +4,8 @@ from app.expressions.Unary import Unary
 from app.expressions.Literal import Literal
 from app.token_type import TokenType
 from app.Error import Error
+from app.expressions.Print import Print
+from app.expressions.Expression import Expression
 
 
 class Parser:
@@ -14,13 +16,30 @@ class Parser:
         self.err = Error()
 
     def parse(self):
-        try:
-            return self.expression()
-        except Parser.ParseError:
-            return None
+        statments = []
+
+        while not self.is_at_end():
+            statments.append(self.statement())
+
+        return statments
 
     def expression(self):
         return self.equality()
+
+    def statement(self):
+        if self.match(TokenType.PRINT):
+            return self.print_statement()
+        return self.expression_statement()
+
+    def print_statement(self):
+        value = self.expression()
+        self.consume(TokenType.SEMICOLON, "Expect ';' after value.")
+        return Print(value)
+
+    def expression_statement(self):
+        expr = self.expression()
+        self.consume(TokenType.SEMICOLON, "Expect ';' after expression.")
+        return Expression(expr)
 
     def equality(self):
         """
