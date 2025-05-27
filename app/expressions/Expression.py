@@ -1,4 +1,4 @@
-from expressions.Stmt import Stmt
+from app.expressions.Stmt import Stmt
 
 
 class Expression(Stmt):
