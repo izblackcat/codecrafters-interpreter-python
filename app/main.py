@@ -40,6 +40,9 @@ def main():
         expr = parse(tokens=tokens)
         evaluate(expr=expr)
 
+    elif command == "run":
+        print("running...")
+
     else:
         print(f"Unknown command: {command}", file=sys.stderr)
         exit(1)
