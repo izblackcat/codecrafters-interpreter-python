@@ -41,7 +41,9 @@ def main():
         evaluate(expr=expr)
 
     elif command == "run":
-        print("running...")
+        tokens = tokenize(file_contents)
+        stmts = parse(tokens=tokens)
+        evaluate(stmts=stmts)
 
     else:
         print(f"Unknown command: {command}", file=sys.stderr)
